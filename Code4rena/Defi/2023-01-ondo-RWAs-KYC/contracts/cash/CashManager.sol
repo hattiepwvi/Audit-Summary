@@ -199,6 +199,7 @@ contract CashManager is
      *
      * @param collateralAmountIn The amount of collateral one wishes to deposit
      *                           to mint CASH tokens
+     * 总结：提交一个铸造请求。用户需要提供一定数量的抵押品（collateral）以铸造CASH代币。在此过程中会收取一定比例的手续费。
      */
     function requestMint(
         uint256 collateralAmountIn
@@ -245,6 +246,7 @@ contract CashManager is
      *
      * @dev We perform KYC check on the user destined to receive `cash`, not the
      *      msg.sender
+     * 总结： 领取特定时期的铸造奖励（即提交铸造请求时锁定的抵押品所产生的CASH代币）
      */
     function claimMint(
         address user,
@@ -285,6 +287,8 @@ contract CashManager is
      * @dev If the exchange rate differs more than `exchangeRateDeltaLimit`
      *      from the last exchange rate set, the entire contract will be paused.
      *      See `overrideExchangeRate` should this check need to be bypassed
+     * 总结： 设置铸造的兑换率。铸造兑换率决定了每单位抵押品可以兑换多少CASH代币。
+     *       如果新的兑换率与上次设置的兑换率相差过大，合约将会被暂停以防止价格波动。
      */
     function setMintExchangeRate(
         uint256 exchangeRate,
@@ -370,6 +374,7 @@ contract CashManager is
      *      `lastSetMintExchangeRate`, which is compared against
      *      when calling `setMintExchangeRate` to prevent large
      *      swings in prices.
+     * 总结： 由管理员强制设置特定时期的铸造兑换率。
      */
     function overrideExchangeRate(
         uint256 correctExchangeRate,
@@ -396,6 +401,7 @@ contract CashManager is
      * @notice Sets mint exchange rate delta limit
      *
      * @param _exchangeRateDeltaLimit New mint exchange rate delta limit (in bps)
+     * 总结：设置铸造兑换率的变动限制。
      */
     function setMintExchangeRateDeltaLimit(
         uint256 _exchangeRateDeltaLimit
@@ -414,6 +420,7 @@ contract CashManager is
      * @param _mintFee new mint fee specified in basis points
      *
      * @dev The maximum fee that can be set is 10_000 bps, or 100%
+     * 总结： 设置铸造手续费
      */
     function setMintFee(
         uint256 _mintFee
@@ -437,6 +444,7 @@ contract CashManager is
      *      BPS_DENOMINAOR (say 9999) and `mintFee` = 1,
      *      (collateralAmount * mintFee) / BPS_DENOMINATOR will incorrectly
      *      return 0.
+     * 总结： 设置最小抵押品金额。
      */
     function setMinimumDepositAmount(
         uint256 _minimumDepositAmount
@@ -456,6 +464,7 @@ contract CashManager is
      * @notice Sets fee recipient
      *
      * @param _feeRecipient New fee recipient address
+     * 总结：设置手续费接收地址。
      */
     function setFeeRecipient(
         address _feeRecipient
@@ -469,6 +478,7 @@ contract CashManager is
      * @notice Sets asset recipient
      *
      * @param _assetRecipient New asset recipient address
+     * 总结：设置资产接收地址。
      */
     function setAssetRecipient(
         address _assetRecipient
@@ -491,6 +501,7 @@ contract CashManager is
      *
      * @dev Scales to 24 decimals to divide by exchange rate in 6 decimals,
      *      bringing us down to 18 decimals of precision
+     * 总结： 根据抵押品数量和时期返回应该铸造的CASH代币数量
      */
     function _getMintAmountForEpoch(
         uint256 collateralAmountIn,
@@ -506,6 +517,7 @@ contract CashManager is
      *
      * @param collateralAmount Amount `collateral` to exchange
      *                         (in decimals of `collateral`)
+     * 总结：根据抵押品数量返回应该支付的手续费。
      */
     function _getMintFees(
         uint256 collateralAmount
@@ -518,6 +530,7 @@ contract CashManager is
      *
      * @dev This helper is used for converting the collateral's decimals
      *      representation to the CASH amount decimals representation.
+     * 总结： 将提供的数量按照一个倍数进行放大。
      */
     function _scaleUp(uint256 amount) private view returns (uint256) {
         return amount * decimalsMultiplier;
@@ -550,6 +563,7 @@ contract CashManager is
      * @notice Update the duration of one epoch
      *
      * @param _epochDuration The epoch duration in seconds
+     * 总结：更新一个时期（epoch）的持续时间，输入参数 _epochDuration 是一个以秒为单位的时期持续时间。
      */
     function setEpochDuration(
         uint256 _epochDuration
@@ -561,6 +575,7 @@ contract CashManager is
 
     /**
      * @notice Modifier to transition epoch
+     * 总结：先执行 transitionEpoch()的修饰符
      */
     modifier updateEpoch() {
         transitionEpoch();
@@ -580,6 +595,8 @@ contract CashManager is
      *         3) `currentEpoch` is incremented by number of epochs that
      *            have elapsed
      *         4) `currentEpochStartTimestamp` is set.
+     * 总结： 检查已经过去了多少个时期epoch;
+     *       执行相应的操作，包括记录当前时期的总供应量、将currentRedeemAmount和currentMintAmount置零、递增当前时期数以及更新当前时期的开始时间戳。
      */
     function transitionEpoch() public {
         uint256 epochDifference = (block.timestamp -
@@ -600,6 +617,7 @@ contract CashManager is
      * @param _mintLimit The token amount
      *
      * @dev If a limit is zero, the relevant check always fails.
+     * 总结： 更新一个时期 epoch 内可以铸造的代币数量上限
      */
     function setMintLimit(uint256 _mintLimit) external onlyRole(MANAGER_ADMIN) {
         uint256 oldMintLimit = mintLimit;
@@ -613,6 +631,7 @@ contract CashManager is
      * @param _redeemLimit The token amount
      *
      * @dev If a limit is zero, the relevant check always fails.
+     * 总结：更新一个时期 epoch 内可以赎回的代币数量上限。
      */
     function setRedeemLimit(
         uint256 _redeemLimit
@@ -629,6 +648,7 @@ contract CashManager is
      *
      * @dev Reverts if the requested mint amount exceeds the current limit
      * @dev Should only be called w/n functions w/ `updateEpoch` modifier
+     * 总结：用于检查用户请求的铸造金额是否超过了当前时期的铸造速率限制。
      */
     function _checkAndUpdateMintLimit(uint256 collateralAmountIn) private {
         if (collateralAmountIn > mintLimit - currentMintAmount) {
@@ -645,6 +665,7 @@ contract CashManager is
      *
      * @dev Reverts if the requested redeem amount exceeds the current limit
      * @dev Should only be called w/n function w/ `updateEpoch` modifier
+     * 总结： 检查用户请求的赎回金额是否超过了当前时期的赎回速率限制。
      */
     function _checkAndUpdateRedeemLimit(uint256 amount) private {
         if (amount == 0) {
@@ -890,19 +911,25 @@ contract CashManager is
      *
      * @dev The total burned amount for the epoch must be set appropriately
      *      in order to correctly calculate redemptions.
+     * 总结：这个函数是一个管理员级别的操作，用于设定用户在特定纪元（epoch）中的待处理赎回余额。
      */
     function setPendingRedemptionBalance(
         address user,
         uint256 epoch,
         uint256 balance
     ) external updateEpoch onlyRole(MANAGER_ADMIN) {
+        // 函数会检查传入的 epoch 是否大于当前纪元 currentEpoch，
         if (epoch > currentEpoch) {
             revert CannotServiceFutureEpoch();
         }
+        // 获取用户在该纪元中之前的余额 previousBalance。
         uint256 previousBalance = redemptionInfoPerEpoch[epoch]
             .addressToBurnAmt[user];
         // Increment or decrement total burned for the epoch based on whether we
         // are increasing or decreasing the balance.
+        // 函数会根据新旧余额的变化情况，来更新该纪元的总燃烧量 totalBurned。
+        // 如果新余额小于旧余额，说明用户减少了燃烧，所以总燃烧量会相应减少；
+        // 如果新余额大于旧余额，说明用户增加了燃烧，总燃烧量会相应增加。
         if (balance < previousBalance) {
             redemptionInfoPerEpoch[epoch].totalBurned -=
                 previousBalance -
@@ -913,6 +940,7 @@ contract CashManager is
                 previousBalance;
         }
         redemptionInfoPerEpoch[epoch].addressToBurnAmt[user] = balance;
+        // 函数会更新该纪元中用户的燃烧余额，并触发一个事件 PendingRedemptionBalanceSet，
         emit PendingRedemptionBalanceSet(
             user,
             epoch,
