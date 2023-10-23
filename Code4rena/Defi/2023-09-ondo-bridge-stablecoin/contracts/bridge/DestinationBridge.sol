@@ -12,6 +12,17 @@
    ╙▀██▄ '╙╙╙▀▀▀▀▀▀▀▀
       ╙▀▀██████R⌐
 
+    总结： 将一个区块链上的代币（比如以太币）“桥接/跨链”到另一个区块链上
+        1）逻辑：
+            - 批准者和阈值：需要人批准这个跨链的操作；阈值：不同的跨链需要不同程度的批准（更多人数的批准）
+            - 合约所有者/管理者：只有管理者可以添加或移除批准者。
+            - 合约继承了四个其他合约，分别是AxelarExecutable、MintTimeBasedRateLimiter、Ownable和Pausable。
+        2）状态变量：TOKEN、批准者 approver 的映射，txnHash 交易的哈希值用于获取批准者的数量
+        3）函数：
+               - 构造函数：传入的_token参数赋值给TOKEN状态变量，将_ondoApprover地址设置为批准者。
+               - 函数 _execute、_attachThreshold、_approve等，用于处理消息的执行、批准等逻辑。
+        4）事件：ApproverRemoved的事件，用于当一个地址被移除为批准者时发出通知。
+            
  */
 pragma solidity 0.8.16;
 
@@ -83,32 +94,42 @@ contract DestinationBridge is
    * @param payload  The payload to pass cross chain
    */
   function _execute(
+    // 3 个参数： 源链、源合约、传递到跨链操作的有效载荷（payload）。
     string calldata srcChain,
     string calldata srcAddr,
     bytes calldata payload
   ) internal override whenNotPaused {
+    // 解码了传递的 payload，获得了四个变量：version、srcSender、amt、nonce。
     (bytes32 version, address srcSender, uint256 amt, uint256 nonce) = abi
       .decode(payload, (bytes32, address, uint256, uint256));
 
+    // 是否符合预期的版本号
     if (version != VERSION) {
       revert InvalidVersion();
     }
+    // srcChain、srcAddr是否被合约支持
     if (chainToApprovedSender[srcChain] == bytes32(0)) {
       revert ChainNotSupported();
     }
     if (chainToApprovedSender[srcChain] != keccak256(abi.encode(srcAddr))) {
       revert SourceNotSupported();
     }
+    // nonce 是否已被使用（避免被重复使用）
     if (isSpentNonce[chainToApprovedSender[srcChain]][nonce]) {
       revert NonceSpent();
     }
 
     isSpentNonce[chainToApprovedSender[srcChain]][nonce] = true;
 
+    // 满足一系列条件后处理跨链交易
+    // 计算了一个交易哈希 txnHash，并将相关信息存储在 txnHashToTransaction 映射中
     bytes32 txnHash = keccak256(payload);
     txnHashToTransaction[txnHash] = Transaction(srcSender, amt);
+    // 根据传入的跨链的代币数量、源链等参数，查找阈值信息，并将阈值与交易哈希 txnHash关联起来
     _attachThreshold(amt, txnHash, srcChain);
+    // 将调用者添加到批准者列表
     _approve(txnHash);
+    // 将调用者添加到批准者列表，并铸币发给调用者
     _mintIfThresholdMet(txnHash);
     emit MessageReceived(srcChain, srcSender, amt, nonce);
   }
@@ -126,14 +147,17 @@ contract DestinationBridge is
    *                 being bridged originated from.
    */
   function _attachThreshold(
+    // 3 个参数： 跨链的代币数量、交易哈希、源链
     uint256 amount,
     bytes32 txnHash,
     string memory srcChain
   ) internal {
+    // 获取源链的阈值信息
     Threshold[] memory thresholds = chainToThresholds[srcChain];
     for (uint256 i = 0; i < thresholds.length; ++i) {
       Threshold memory t = thresholds[i];
       if (amount <= t.amount) {
+        // 将该阈值与 txnHash 关联
         txnToThresholdSet[txnHash] = TxnThreshold(
           t.numberOfApprovalsNeeded,
           new address[](0)
@@ -155,14 +179,18 @@ contract DestinationBridge is
    */
   function _approve(bytes32 txnHash) internal {
     // Check that the approver has not already approved
+    // txnHash 对应的阈值信息。
     TxnThreshold storage t = txnToThresholdSet[txnHash];
+    // 检查阈值信息中的 approvers 数组是否有元素
     if (t.approvers.length > 0) {
       for (uint256 i = 0; i < t.approvers.length; ++i) {
+        // 如果 msg.sender 已经是一个批准者，就会抛出一个异常表示当前调用者已经批准过了。
         if (t.approvers[i] == msg.sender) {
           revert AlreadyApproved();
         }
       }
     }
+    // 否则将当前调用者 msg.sender 添加到批准者列表
     t.approvers.push(msg.sender);
   }
 
@@ -195,10 +223,14 @@ contract DestinationBridge is
    * @param txnHash The keccak256 hash of the payload
    */
   function approve(bytes32 txnHash) external {
+    // 如果调用者不是批准者就报错
     if (!approvers[msg.sender]) {
       revert NotApprover();
     }
+    // 如果调用者不在批准列表中就添加到批准列表中
     _approve(txnHash);
+
+    // 如果调用者不在批准列表中就添加到批准列表中，TOKEN.mint 进行铸币操作并将代币发送给调用者
     _mintIfThresholdMet(txnHash);
   }
 
@@ -253,16 +285,20 @@ contract DestinationBridge is
    *      in empty arrays will remove all thresholds for a given chain
    */
   function setThresholds(
+    // 源链、阈值对应的数量、阈值所需的批准者数量
     string calldata srcChain,
     uint256[] calldata amounts,
     uint256[] calldata numOfApprovers
   ) external onlyOwner {
+    // amounts 和 numOfApprovers 数组的长度是否相等
     if (amounts.length != numOfApprovers.length) {
       revert ArrayLengthMismatch();
     }
+    // 清除先前设置的给定链的所有阈值，并用这个函数的参数来设置新的阈值
     delete chainToThresholds[srcChain];
     for (uint256 i = 0; i < amounts.length; ++i) {
       if (i == 0) {
+        // 遍历 amounts 数组，并根据指定的顺序将阈值添加到 chainToThresholds[srcChain]
         chainToThresholds[srcChain].push(
           Threshold(amounts[i], numOfApprovers[i])
         );
@@ -318,8 +354,17 @@ contract DestinationBridge is
    * @notice Admin function used to rescue ERC20 Tokens sent to the contract
    *
    * @param _token The address of the token to rescue
+   * 总结： 管理者（admin）函数，用于从合约中提取被误发送到合约地址的ERC20代币
+   * 建议：使用一个被称为“safe” wrapper的方法来执行ERC20代币的转账，以提高兼容性和安全性。
+   *      这个“safe” wrapper通常会先检查转账是否成功，如果不成功就会抛出一个错误，从而避免了一些潜在的问题。
+   *        function safeTransfer(address token, address to, uint256 value) internal {
+                (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0xa9059cbb, to, value));
+                require(success && (data.length == 0 || abi.decode(data, (bool))), "Transfer failed");
+            }
+
    */
   function rescueTokens(address _token) external onlyOwner {
+    // 获取代币余额并将余额转移到了合约的所有者（owner）地址。
     uint256 balance = IRWALike(_token).balanceOf(address(this));
     IRWALike(_token).transfer(owner(), balance);
   }
@@ -332,7 +377,7 @@ contract DestinationBridge is
    * @notice internal function to mint a transaction if it has passed the threshold
    *         for the number of approvers
    *
-   * @param txnHash The hash of the transaction we wish to mint
+   * @param txnHash The hash of the transaction we wish to mint 交易的哈希值
    */
   function _mintIfThresholdMet(bytes32 txnHash) internal {
     bool thresholdMet = _checkThresholdMet(txnHash);
