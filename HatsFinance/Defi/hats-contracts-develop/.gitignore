@@ -1,0 +1,27 @@
+*sublime*
+*.pyc
+build/
+logs/
+node_modules/
+.node-xmlhttprequest-sync*
+*.tgz
+.vscode/
+site/
+coverage/
+coverage.json
+.covera*
+cache/
+yarn*
+frontend/
+.env
+snapshot.json
+node_modules
+
+#Hardhat files
+cache
+artifacts
+.private.json
+remix-compiler.config.js
+.DS_Store
+.openzeppelin
+gas-report.txt
