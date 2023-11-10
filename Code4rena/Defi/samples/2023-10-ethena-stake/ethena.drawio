@@ -1,0 +1,60 @@
+<mxfile host="app.diagrams.net" modified="2023-10-30T12:57:14.119Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="U9-4RyNqGfN_G-zfPuv7" version="22.0.8" type="device">
+  <diagram name="第 1 页" id="d5awAymVNaUGZ_6HSmsv">
+    <mxGraphModel dx="2354" dy="615" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="UFPiSS5FsPZg2K-IZP7Q-1" target="UA0FQ-mgPSQAvQnyLMBc-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UFPiSS5FsPZg2K-IZP7Q-1" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1、EthenaMinting.sol&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1）external&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;申购、赎回、&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1.1）设置每个区块最大铸造和赎回数量、禁止铸造和赎回（0）&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1.2）移除支持的资产列表的资产、移除专门用于存放资金用的托管地址的列表的托管地址&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1.3）移除 miner、redeemer 角色&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2) public&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2.1) 添加资产到支持列表、添加&lt;/span&gt;托管者地址添加到支持的托管者列表中。&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2.2）获取代币的域分隔符（Domain Separator）。&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2.3）计算一个订单结构的哈希值。&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;将订单结构、Route编码为字节数组。&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;=&amp;gt; 验证已签名订单、Route、Nounce&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3) private&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3.1) 确保订单的 nonce 是唯一的&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;4）internal&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;4.1) 将支持的资产转移给指定的受益人、转移给一组托管地址；设置最大铸造、赎回；&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="90" y="120" width="410" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="smdWA5o9i8yB2rrHUtPG-4" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="smdWA5o9i8yB2rrHUtPG-3" target="UFPiSS5FsPZg2K-IZP7Q-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="smdWA5o9i8yB2rrHUtPG-3" value="Ethena" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="230" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="UA0FQ-mgPSQAvQnyLMBc-1" target="UA0FQ-mgPSQAvQnyLMBc-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-1" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2、StakedUSDeV2.sol&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1）构造函数&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1.1）&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;初始化了 StakedUSDeV2 合约的一些参数和状态变量，同时创建了一个新的 USDeSilo 合约。&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2）external&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1.1）取款、赎回份额；&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1.2）冷却期结束后解压资产（从&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;silo 合约中提取/取款资产）；赎回资产或讲份额赎回为资产并开始冷却期以领取转换后的基础资产；&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1.3）设置冷却期时长&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="505" width="410" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="UA0FQ-mgPSQAvQnyLMBc-4" target="UFPiSS5FsPZg2K-IZP7Q-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-4" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1、EthenaMinting.sol&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;只有一个经过批准的铸币者（minter）可以铸造新的代币。&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1）函数&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1.1）构造函数：&lt;span style=&quot;background-color: initial;&quot;&gt;将合约的所有权转移给了 admin 地址。&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1.2）设置铸造者、铸造代币、禁止合约所有者放弃所有权&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="180" width="410" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-6" value="2、USDeSilo.sol&lt;br&gt;1)&amp;nbsp;Silo 合约允许在质押冷却过程中存储 USDe。&lt;br&gt;2) 提取：只有存储质押的合约地址才能指定数量的 USDe 代币发送到指定地址。" style="whiteSpace=wrap;html=1;rounded=0;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-210" y="532.5" width="170" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="UA0FQ-mgPSQAvQnyLMBc-8" target="UA0FQ-mgPSQAvQnyLMBc-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="585" />
+              <mxPoint x="540" y="585" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-8" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2、StakedUSDe.sol&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1）external&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;奖励、黑名单管理&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1.1）合约&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;所有者从控制合约中转移奖励到当前合约中，合约所有者和黑名单管理员讲地址列入、移除黑名单，合约所有者处理意外发送到合约的代币、合约所有者销毁黑名单用户的代币并铸造发送给自己。&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2）public&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;2.1) 返回合约已经解锁的&amp;nbsp;&lt;/span&gt;USDe 代币总额（减去未解锁的部分、统一设置小数位数）。&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3）internal&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3.1) 防止合约中非常少量的非零份额导致的潜在攻击、&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3.2）存储、提取资产&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3.3）钩子函数：禁止黑名单角色地址相互转账、&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3.4）阻止任何地址放弃任何角色&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="467" width="410" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.546;entryY=0.991;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="UA0FQ-mgPSQAvQnyLMBc-13" target="UA0FQ-mgPSQAvQnyLMBc-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="315" y="722.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="314" y="740" />
+              <mxPoint x="314" y="740" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UA0FQ-mgPSQAvQnyLMBc-13" value="3、SingleAdminAccessControl&lt;br&gt;1）只有管理员能：将管理员角色转移给一个新的地址；新管理员接受角色；返回管理员地址&lt;br&gt;2）授予（不能授予管理员角色，但是_grantRole 又能转让管理员角色）、撤销角色（不能撤销管理员角色）&lt;br&gt;3）允许账户放弃角色（不能放弃管理员角色）" style="whiteSpace=wrap;html=1;rounded=0;align=left;" vertex="1" parent="1">
+          <mxGeometry x="170" y="810" width="290" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
